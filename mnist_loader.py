@@ -17,9 +17,9 @@ def load_data():
     train, other = train_test_split(tuple_data, train_size=0.7)
     validation, test = train_test_split(other, test_size=0.5)
 
-    train_data = [(np.reshape(data[0], (64, 1)), vectorized_result(data[1])) for data in train]
-    validation_data = [(np.reshape(data[0], (64, 1)), data[1]) for data in validation]
-    test_data = [(np.reshape(data[0], (64, 1)), data[1]) for data in test]
+    train_data = [(np.reshape(image, (64, 1)), vectorized_result(digit)) for image, digit in train]
+    validation_data = [(np.reshape(image, (64, 1)), digit) for image, digit in validation]
+    test_data = [(np.reshape(image, (64, 1)), digit) for image, digit in test]
     
     return (train_data, validation_data, test_data)
 
