@@ -65,7 +65,7 @@ class Network:
         nabla_b = [np.zeros(b.shape) for b in self.biases]
         nabla_w = [np.zeros(w.shape) for w in self.weights]
         for image, digit in mini_batch:
-            delta_nabla_b, delta_nabla_w = self.backprop(image, digit)
+            delta_nabla_b, delta_nabla_w = self.backpropagation(image, digit)
             nabla_b = [nb+dnb for nb, dnb in zip(nabla_b, delta_nabla_b)]
             nabla_w = [nw+dnw for nw, dnw in zip(nabla_w, delta_nabla_w)]
         self.weights = [(1-learn_rate*(lambda_/n))*w-(learn_rate/len(mini_batch))*nw
@@ -73,7 +73,7 @@ class Network:
         self.biases = [b-(learn_rate/len(mini_batch))*nb
                        for b, nb in zip(self.biases, nabla_b)]
 
-    def backprop(self, image, digit):
+    def backpropagation(self, image, digit):
         '''
         Return a tuple (nabla_b, nabla_w) representing the
         gradient for the cost function. nabla_b and nabla_w
@@ -87,8 +87,8 @@ class Network:
         activation = image
         activations = [image] # list to store all the activations, layer by layer
         zs = [] # list to store all the z vectors, layer by layer
-        for b, w in zip(self.biases, self.weights):
-            z = np.dot(w, activation)+b
+        for bias, weight in zip(self.biases, self.weights):
+            z = np.dot(weight, activation)+bias
             zs.append(z)
             activation = sigmoid(z)
             activations.append(activation)
@@ -97,12 +97,12 @@ class Network:
         delta = (activations[-1] - digit) * sigmoid_prime(zs[-1])
         nabla_b[-1] = delta
         nabla_w[-1] = np.dot(delta, activations[-2].transpose())
-        for l in range(2, self.num_layers):
-            z = zs[-l]
+        for layer in range(2, self.num_layers):
+            z = zs[-layer]
             sp = sigmoid_prime(z)
-            delta = np.dot(self.weights[-l+1].transpose(), delta) * sp
-            nabla_b[-l] = delta
-            nabla_w[-l] = np.dot(delta, activations[-l-1].transpose())
+            delta = np.dot(self.weights[1-layer].transpose(), delta) * sp
+            nabla_b[-layer] = delta
+            nabla_w[-layer] = np.dot(delta, activations[-1-layer].transpose())
         return (nabla_b, nabla_w)
 
     def accuracy(self, data, convert=False):
