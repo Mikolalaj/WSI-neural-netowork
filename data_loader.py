@@ -2,7 +2,7 @@ from sklearn import datasets
 from sklearn.model_selection import train_test_split
 import numpy as np
 
-def load_data():
+def load_data(image_size):
     '''
     Return the MNIST data as a tuple containing the training data,
     the validation data, and the test data splitted in ratio 70:15:15.
@@ -17,9 +17,9 @@ def load_data():
     train, other = train_test_split(tuple_data, train_size=0.7)
     validation, test = train_test_split(other, test_size=0.5)
 
-    train_data = [(np.reshape(image, (64, 1)), vectorized_result(digit)) for image, digit in train]
-    validation_data = [(np.reshape(image, (64, 1)), digit) for image, digit in validation]
-    test_data = [(np.reshape(image, (64, 1)), digit) for image, digit in test]
+    train_data = [(np.reshape(image, (image_size, 1)), vectorized_result(digit)) for image, digit in train]
+    validation_data = [(np.reshape(image, (image_size, 1)), digit) for image, digit in validation]
+    test_data = [(np.reshape(image, (image_size, 1)), digit) for image, digit in test]
     
     return (train_data, validation_data, test_data)
 
